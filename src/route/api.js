@@ -19,6 +19,7 @@ router.post("/updateCoinCustomer", APIController.updateCoinsCustomer)
 
 // //CRUD Voucher
 router.get("/admin/voucher", APIController.getAllVoucher)
+router.post("/admin/voucherSearch", APIController.getVoucherSearch)
 router.post("/createNewVoucher", APIController.createVoucher)
 router.get("/admin/updateVoucher/:idVoucher", APIController.getUpdateVoucher)
 router.post("/updateVoucher", APIController.updateVoucher)

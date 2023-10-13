@@ -206,6 +206,47 @@ let getAllVoucher = async (req, res) => {
   });
 };
 
+let getVoucherSearch = async (req, res) => {
+  let {input, select} = req.body;
+  if(input !== '' && select === 'nameVoucher') {
+    const [rows, fields] = await pool.execute(
+      "SELECT *, DATE_FORMAT(ngaytao, '%d/%m/%Y') as formatted_ngaytao, DATE_FORMAT(ngayhethan, '%d/%m/%Y') as formatted_ngayhethan FROM voucher where dasudung = 0 and ngaytao <= ngayhethan and soluong > 0 and ngayhethan >= CURDATE() and nameVoucher LIKE ?", ['%' + input + '%']
+    );
+
+    console.log("1: ", rows)
+  
+    const [rowsAdmin, fieldsAdmin] = await pool.execute(
+      "select nameAdmin from admin where idAdmin=0"
+    );
+    const nameAdmin = rowsAdmin[0].nameAdmin;
+  
+    return res.status(200).json({
+      dataVoucher: rows,
+      nameAdmin,
+    });
+  } else if(input !== '' && select === 'nguoitao') {
+    const [rows, fields] = await pool.execute(
+      "SELECT *, DATE_FORMAT(ngaytao, '%d/%m/%Y') as formatted_ngaytao, DATE_FORMAT(ngayhethan, '%d/%m/%Y') as formatted_ngayhethan FROM voucher where dasudung = 0 and ngaytao <= ngayhethan and soluong > 0 and ngayhethan >= CURDATE() and nguoitao like ?", ['%' + input + '%']
+    );
+
+    console.log("2: ", rows)
+  
+    const [rowsAdmin, fieldsAdmin] = await pool.execute(
+      "select nameAdmin from admin where idAdmin=0"
+    );
+    const nameAdmin = rowsAdmin[0].nameAdmin;
+  
+    return res.status(200).json({
+      dataVoucher: rows,
+      nameAdmin,
+    });
+  } else {
+    return res
+      .status(500)
+      .json({ error: "Không hiển thị được trang voucher!" });
+  }
+};
+
 let createVoucher = async (req, res) => {
   let { nameVoucher, soluong, giam, toida, nguoitao, ngaytao, ngayhethan } =
     req.body;
@@ -447,32 +488,68 @@ let updateNewPassword = async (req, res) => {
 
 /* Khách hàng */
 let loginCustomer = async (req, res) => {
-  let { email, password } = req.body;
+  // let { email, password } = req.body;
+
+  // const [rows, fields] = await pool.execute(
+  //   "select email, password from customer where email= ? and password= ? and trangthai=1",
+  //   [email, password]
+  // );
+
+  // if (rows) {
+  //   if (rows.length > 0) {
+  //     const emailValue = rows[0].email;
+  //     const passValue = rows[0].password;
+
+  //     if (emailValue == email && password == passValue) {
+  //       console.log("Đăng nhập thành công!");
+  //       return res.status(200).json({
+  //         dataUser: rows[0],
+  //       });
+  //     } else {
+  //       console.log("Đăng nhập không thành công 1!");
+  //       return res
+  //         .status(400)
+  //         .json({ error: "\n Đăng nhập không thành công 2!" });
+  //     }
+  //   }
+  // } else {
+  //   console.log("Đăng nhập không thành công 3!");
+  //   return res.status(500).json({ error: "\n Đăng nhập không thành công 3!" });
+  // }
+
+  try {
+let { email, password } = req.body;
 
   const [rows, fields] = await pool.execute(
     "select email, password from customer where email= ? and password= ? and trangthai=1",
     [email, password]
   );
 
-  if (rows) {
-    if (rows.length > 0) {
-      const emailValue = rows[0].email;
-      const passValue = rows[0].password;
-
-      if (emailValue == email && password == passValue) {
-        console.log("Đăng nhập thành công!");
-        return res.status(200).json({
-          dataUser: rows[0],
-        });
+      if (rows && rows.length > 0) {
+        const emailValue = rows[0].email;
+        const passValue = rows[0].password;
+  
+        if (emailValue == email && password == passValue) {
+          console.log("Đăng nhập thành công!");
+          return res.status(200).json({
+            dataUser: rows[0],
+          });
+        } else {
+          console.log("Đăng nhập không thành công 1!");
+          return res
+            .status(400)
+            .json({ error: "\n Đăng nhập không thành công 1!" });
+        }
       } else {
-        console.log("Đăng nhập không thành công 1!");
+        console.log("Đăng nhập không thành công 2!");
         return res
           .status(500)
           .json({ error: "\n Đăng nhập không thành công 2!" });
       }
-    }
-  } else {
-    console.log("Đăng nhập không thành công 3!");
+
+
+  } catch (error) {
+        console.log("Đăng nhập không thành công 3!");
     return res.status(500).json({ error: "\n Đăng nhập không thành công 3!" });
   }
 };
@@ -639,6 +716,7 @@ module.exports = {
   updateCoinsCustomer,
   updatePointCustomer,
   getAllVoucher,
+  getVoucherSearch,
   createVoucher,
   getUpdateVoucher,
   updateVoucher,
