@@ -92,7 +92,7 @@ required('./file_name')
 * Đẩy code một folder lên github
   git add .
   git commit -m 'user npm'
-  git push oridin dev
+  git push origin dev /  git push origin master
   
   * Thêm một folder lên github
   git add .
