@@ -488,34 +488,7 @@ let updateNewPassword = async (req, res) => {
 
 /* Khách hàng */
 let loginCustomer = async (req, res) => {
-  // let { email, password } = req.body;
 
-  // const [rows, fields] = await pool.execute(
-  //   "select email, password from customer where email= ? and password= ? and trangthai=1",
-  //   [email, password]
-  // );
-
-  // if (rows) {
-  //   if (rows.length > 0) {
-  //     const emailValue = rows[0].email;
-  //     const passValue = rows[0].password;
-
-  //     if (emailValue == email && password == passValue) {
-  //       console.log("Đăng nhập thành công!");
-  //       return res.status(200).json({
-  //         dataUser: rows[0],
-  //       });
-  //     } else {
-  //       console.log("Đăng nhập không thành công 1!");
-  //       return res
-  //         .status(400)
-  //         .json({ error: "\n Đăng nhập không thành công 2!" });
-  //     }
-  //   }
-  // } else {
-  //   console.log("Đăng nhập không thành công 3!");
-  //   return res.status(500).json({ error: "\n Đăng nhập không thành công 3!" });
-  // }
 
   try {
 let { email, password } = req.body;
